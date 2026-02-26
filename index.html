@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Anderson Family</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F8F4EE;
+    --warm: #E8DDD0;
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --brown: #6B4F3A;
+    --dark: #1A1410;
+    --text: #2D2018;
+    --muted: #9B8877;
+    --glass: rgba(248,244,238,0.85);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Josefin Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed; top: 0; left: 0;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s ease;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed; top: 0; left: 0;
+    width: 40px; height: 40px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    opacity: 0.6;
+  }
+  .cursor-ring.hover { width: 60px; height: 60px; opacity: 1; border-color: var(--gold-light); }
+
+  /* Noise Overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    height: 100vh; min-height: 700px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    background: linear-gradient(160deg, #1A1410 0%, #2D1F15 40%, #3D2A1A 100%);
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(120px, 20vw, 280px);
+    font-weight: 300;
+    color: rgba(201,168,76,0.06);
+    letter-spacing: 0.1em;
+    user-select: none;
+    white-space: nowrap;
+    top: 50%; transform: translateY(-50%);
+    animation: bgDrift 20s ease-in-out infinite alternate;
+  }
+  @keyframes bgDrift { from { transform: translateY(-52%) translateX(-1%); } to { transform: translateY(-48%) translateX(1%); } }
+
+  .hero-ornament {
+    position: absolute;
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0.5;
+    animation: ornamentGrow 1.5s ease forwards;
+  }
+  .hero-ornament.left { height: 0; left: 8vw; top: 15%; animation-delay: 0.5s; }
+  .hero-ornament.right { height: 0; right: 8vw; top: 15%; animation-delay: 0.7s; }
+  @keyframes ornamentGrow { to { height: 70vh; } }
+
+  .hero-line-h {
+    position: absolute;
+    height: 1px; width: 0;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    opacity: 0.3;
+    animation: lineGrow 1.5s ease 1s forwards;
+  }
+  .hero-line-h.top { top: 15%; left: 8vw; }
+  .hero-line-h.bottom { bottom: 15%; left: 8vw; }
+  @keyframes lineGrow { to { width: 84vw; } }
+
+  .hero-content {
+    position: relative; z-index: 10;
+    text-align: center;
+    animation: heroFadeUp 1.2s ease 0.3s both;
+  }
+  @keyframes heroFadeUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+
+  .hero-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px; font-weight: 200;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.8s forwards;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 9vw, 120px);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 0.9;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+  .hero-title em { font-style: italic; color: var(--gold-light); }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 2.5vw, 26px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 16px;
+    margin-bottom: 40px;
+    letter-spacing: 0.1em;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.2s forwards;
+  }
+
+  .hero-since {
+    font-size: 10px; letter-spacing: 0.6em;
+    color: var(--gold); text-transform: uppercase;
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    opacity: 0; animation: fadeIn 1s ease 1.5s forwards;
+  }
+  .hero-since::before, .hero-since::after {
+    content: ''; display: block; width: 60px; height: 1px; background: var(--gold); opacity: 0.5;
+  }
+
+  .scroll-indicator {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0; animation: fadeIn 1s ease 2s forwards;
+  }
+  .scroll-indicator span { font-size: 9px; letter-spacing: 0.4em; color: var(--muted); text-transform: uppercase; }
+  .scroll-dot {
+    width: 6px; height: 20px; border: 1px solid var(--muted); border-radius: 3px; position: relative; overflow: hidden;
+  }
+  .scroll-dot::after {
+    content: ''; position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+    width: 2px; height: 6px; background: var(--gold); border-radius: 1px;
+    animation: scrollBounce 1.5s ease infinite;
+  }
+  @keyframes scrollBounce { 0%,100% { top: 2px; } 50% { top: 12px; } }
+
+  /* ─── SECTION COMMON ─── */
+  section { position: relative; }
+
+  .section-label {
+    font-size: 9px; letter-spacing: 0.6em; text-transform: uppercase;
+    color: var(--gold); display: flex; align-items: center; gap: 16px;
+    margin-bottom: 16px;
+  }
+  .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--gold); opacity: 0.5; }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  /* ─── FAMILY TREE BANNER ─── */
+  .tree-banner {
+    background: var(--cream);
+    padding: 80px 0 60px;
+    text-align: center;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .tree-banner-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 40px;
+  }
+  .generation-tags {
+    display: flex; justify-content: center; gap: 40px; margin-top: 40px;
+    flex-wrap: wrap;
+  }
+  .gen-tag {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--muted);
+  }
+  .gen-dot {
+    width: 10px; height: 10px; border-radius: 50%; border: 1px solid currentColor;
+  }
+  .gen-dot.g1 { background: var(--gold); border-color: var(--gold); }
+  .gen-dot.g2 { background: var(--brown); border-color: var(--brown); }
+  .gen-dot.g3 { background: transparent; border-color: var(--muted); }
+
+  /* ─── FAMILY GRID ─── */
+  .family-section {
+    padding: 80px 40px;
+    max-width: 1400px; margin: 0 auto;
+  }
+
+  .generation-block {
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .generation-block.visible { opacity: 1; transform: translateY(0); }
+
+  .gen-header {
+    display: flex; align-items: center; gap: 24px;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .gen-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px; font-weight: 300;
+    color: rgba(201,168,76,0.15);
+    line-height: 1;
+  }
+  .gen-info { flex: 1; }
+  .gen-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 300;
+    color: var(--text);
+  }
+  .gen-desc { font-size: 11px; letter-spacing: 0.3em; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  /* ─── MEMBER CARD ─── */
+  .member-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid rgba(201,168,76,0.15);
+    overflow: hidden;
+    cursor: none;
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s ease, border-color 0.3s;
+  }
+  .member-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(26,20,16,0.15);
+    border-color: rgba(201,168,76,0.4);
+  }
+
+  .card-photo {
+    width: 100%; aspect-ratio: 3/4;
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--warm) 0%, #D4C4B0 100%);
+  }
+  .card-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.23,1,0.32,1);
+  }
+  .member-card:hover .card-photo img { transform: scale(1.06); }
+
+  .photo-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px;
+  }
+  .placeholder-initial {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px; font-weight: 300;
+    color: var(--brown); opacity: 0.4;
+    line-height: 1;
+  }
+  .placeholder-icon {
+    font-size: 24px; opacity: 0.2;
+  }
+
+  .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(26,20,16,0.85) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex; align-items: flex-end; padding: 24px;
+  }
+  .member-card:hover .card-overlay { opacity: 1; }
+
+  .overlay-action {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--cream); font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
+  }
+  .overlay-action::before {
+    content: '';
+    width: 0; height: 1px; background: var(--gold);
+    transition: width 0.4s ease 0.1s;
+  }
+  .member-card:hover .overlay-action::before { width: 24px; }
+
+  .card-body {
+    padding: 20px 24px 24px;
+    position: relative;
+  }
+  .card-body::before {
+    content: '';
+    position: absolute; top: 0; left: 24px; right: 24px;
+    height: 1px; background: linear-gradient(to right, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 400;
+    color: var(--text); line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .card-role {
+    font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+  }
+  .card-detail {
+    font-size: 11px; color: var(--muted); line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+  .card-meta {
+    display: flex; gap: 16px; margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .meta-item {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-label { font-size: 8px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); opacity: 0.7; }
+  .meta-val { font-size: 11px; color: var(--text); font-family: 'Cormorant Garamond', serif; font-size: 14px; }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 5000;
+    background: rgba(26,20,16,0.92);
+    backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--cream);
+    width: 100%; max-width: 900px; max-height: 90vh;
+    overflow: hidden;
+    display: grid; grid-template-columns: 340px 1fr;
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+    position: relative;
+  }
+  .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+  .modal-photo {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--warm) 0%, #D4C4B0 100%);
+  }
+  .modal-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .modal-photo-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 400px;
+  }
+  .modal-initial {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 140px; font-weight: 300;
+    color: var(--brown); opacity: 0.25;
+    line-height: 1;
+  }
+
+  .modal-photo-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(26,20,16,0.6) 0%, transparent 60%);
+    display: flex; align-items: flex-end; padding: 30px;
+  }
+  .modal-photo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px; font-weight: 300;
+    color: var(--cream); line-height: 1;
+  }
+  .modal-photo-role {
+    font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
+    color: var(--gold); margin-top: 6px;
+  }
+
+  .modal-content {
+    padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px;
+  }
+
+  .modal-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 40px; height: 40px;
+    background: rgba(26,20,16,0.7);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; cursor: none;
+    transition: background 0.2s, border-color 0.2s;
+    z-index: 10;
+  }
+  .modal-close:hover { background: var(--gold); border-color: var(--gold); color: var(--dark); }
+
+  .modal-section-title {
+    font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .modal-section-title::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,0.2); }
+
+  .modal-bio {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; line-height: 1.7;
+    color: var(--text); font-weight: 300;
+  }
+
+  .modal-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .stat-box {
+    padding: 16px;
+    border: 1px solid rgba(201,168,76,0.15);
+    text-align: center;
+    background: rgba(201,168,76,0.03);
+  }
+  .stat-box .val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300; color: var(--brown);
+  }
+  .stat-box .lbl { font-size: 8px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+  .modal-gallery {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .gallery-thumb {
+    aspect-ratio: 1;
+    background: var(--warm);
+    overflow: hidden;
+    cursor: none;
+    position: relative;
+  }
+  .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+  .gallery-thumb:hover img { transform: scale(1.1); }
+
+  .interests-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .interest-tag {
+    padding: 6px 14px;
+    border: 1px solid rgba(201,168,76,0.3);
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--brown);
+    background: rgba(201,168,76,0.05);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .interest-tag:hover { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.5); }
+
+  /* ─── TIMELINE ─── */
+  .timeline-section {
+    padding: 100px 40px;
+    background: var(--dark);
+    position: relative; overflow: hidden;
+  }
+  .timeline-bg {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 300px; font-weight: 300;
+    color: rgba(201,168,76,0.03);
+    white-space: nowrap; pointer-events: none; user-select: none;
+  }
+  .timeline-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .timeline-section .section-title { color: var(--cream); }
+  .timeline-section .section-label { color: var(--gold); }
+
+  .timeline {
+    margin-top: 60px;
+    position: relative;
+    padding-left: 40px;
+  }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .timeline-item {
+    position: relative; margin-bottom: 48px;
+    padding-left: 32px;
+    opacity: 0; transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .timeline-item.visible { opacity: 1; transform: translateX(0); }
+
+  .timeline-dot {
+    position: absolute; left: -4px; top: 6px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gold); box-shadow: 0 0 0 4px rgba(201,168,76,0.2);
+  }
+  .timeline-year {
+    font-size: 10px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .timeline-event {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300; color: var(--cream); line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .timeline-desc {
+    font-size: 12px; color: var(--muted); line-height: 1.7;
+    letter-spacing: 0.02em;
+  }
+
+  /* ─── PHOTO MOSAIC ─── */
+  .mosaic-section {
+    padding: 80px 0;
+    background: var(--warm);
+  }
+  .mosaic-header { padding: 0 40px; margin-bottom: 40px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+  .mosaic-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 4px;
+    padding: 0 4px;
+  }
+  .mosaic-item {
+    overflow: hidden; position: relative;
+    background: var(--cream);
+  }
+  .mosaic-item:nth-child(1) { grid-column: span 5; grid-row: span 2; }
+  .mosaic-item:nth-child(2) { grid-column: span 4; }
+  .mosaic-item:nth-child(3) { grid-column: span 3; }
+  .mosaic-item:nth-child(4) { grid-column: span 4; }
+  .mosaic-item:nth-child(5) { grid-column: span 3; }
+  .mosaic-item:nth-child(6) { grid-column: span 5; grid-row: span 2; }
+  .mosaic-item:nth-child(7) { grid-column: span 4; }
+  .mosaic-item:nth-child(8) { grid-column: span 3; }
+
+  .mosaic-ph {
+    width: 100%; min-height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px;
+    color: var(--brown); opacity: 0.35;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 300;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 100%);
+    transition: opacity 0.3s;
+  }
+  .mosaic-ph:hover { opacity: 0.55; }
+
+  .mosaic-item:nth-child(1) .mosaic-ph { min-height: 400px; font-size: 80px; }
+  .mosaic-item:nth-child(6) .mosaic-ph { min-height: 400px; font-size: 80px; }
+
+  .mosaic-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 16px;
+    background: linear-gradient(to top, rgba(26,20,16,0.8), transparent);
+    color: var(--cream);
+    font-size: 11px; letter-spacing: 0.2em;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  .mosaic-item:hover .mosaic-caption { transform: translateY(0); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--dark);
+    padding: 60px 40px 40px;
+    text-align: center;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .footer-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 300; font-style: italic;
+    color: var(--cream); margin-bottom: 8px;
+  }
+  .footer-sub { font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; color: var(--muted); }
+  .footer-divider { width: 60px; height: 1px; background: var(--gold); margin: 24px auto; opacity: 0.4; }
+  .footer-copy { font-size: 10px; letter-spacing: 0.3em; color: var(--muted); text-transform: uppercase; opacity: 0.5; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 4000;
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background 0.4s ease, padding 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(248,244,238,0.95);
+    backdrop-filter: blur(10px);
+    padding: 12px 40px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    box-shadow: 0 4px 20px rgba(26,20,16,0.08);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300; font-style: italic;
+    color: var(--cream); letter-spacing: 0.05em;
+    transition: color 0.4s;
+  }
+  nav.scrolled .nav-logo { color: var(--text); }
+
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+  .nav-links a {
+    font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: rgba(248,244,238,0.7);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  nav.scrolled .nav-links a { color: var(--muted); }
+  .nav-links a:hover { color: var(--gold) !important; }
+
+  /* ─── ANIMATIONS / REVEAL ─── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .modal { grid-template-columns: 1fr; }
+    .modal-photo { min-height: 300px; }
+    .mosaic-grid { grid-template-columns: repeat(2, 1fr); }
+    .mosaic-item { grid-column: span 1 !important; grid-row: span 1 !important; }
+    .family-section { padding: 40px 20px; }
+    .nav-links { display: none; }
+    .modal-stats { grid-template-columns: repeat(2, 1fr); }
+    .modal-gallery { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">Anderson Family</div>
+  <ul class="nav-links">
+    <li><a href="#family">Family</a></li>
+    <li><a href="#heritage">Heritage</a></li>
+    <li><a href="#moments">Moments</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">FAMILY</div>
+  <div class="hero-ornament left"></div>
+  <div class="hero-ornament right"></div>
+  <div class="hero-line-h top"></div>
+  <div class="hero-line-h bottom"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Celebrating three generations</div>
+    <h1 class="hero-title">The <em>Anderson</em><br>Family</h1>
+    <p class="hero-subtitle">Where every story begins at home</p>
+    <div class="hero-since">Est. 1962</div>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-dot"></div>
+  </div>
+</section>
+
+<!-- TREE BANNER -->
+<div class="tree-banner">
+  <div class="tree-banner-inner">
+    <div class="section-label reveal">Our Family</div>
+    <h2 class="section-title reveal">Three Generations, One Legacy</h2>
+    <div class="generation-tags reveal">
+      <div class="gen-tag"><div class="gen-dot g1"></div>Grandparents</div>
+      <div class="gen-tag"><div class="gen-dot g2"></div>Parents &amp; Aunts/Uncles</div>
+      <div class="gen-tag"><div class="gen-dot g3"></div>Grandchildren</div>
+    </div>
+  </div>
+</div>
+
+<!-- FAMILY SECTION -->
+<div class="family-section" id="family">
+
+  <!-- Generation 1 -->
+  <div class="generation-block">
+    <div class="gen-header">
+      <div class="gen-number">01</div>
+      <div class="gen-info">
+        <div class="gen-title">The Grandparents</div>
+        <div class="gen-desc">Founders &bull; The roots of our family tree</div>
+      </div>
+    </div>
+    <div class="members-grid" id="gen1"></div>
+  </div>
+
+  <!-- Generation 2 -->
+  <div class="generation-block">
+    <div class="gen-header">
+      <div class="gen-number">02</div>
+      <div class="gen-info">
+        <div class="gen-title">Parents, Aunts &amp; Uncles</div>
+        <div class="gen-desc">The bridge generation &bull; Carrying the legacy forward</div>
+      </div>
+    </div>
+    <div class="members-grid" id="gen2"></div>
+  </div>
+
+  <!-- Generation 3 -->
+  <div class="generation-block">
+    <div class="gen-header">
+      <div class="gen-number">03</div>
+      <div class="gen-info">
+        <div class="gen-title">The Grandchildren</div>
+        <div class="gen-desc">New beginnings &bull; The future of our family</div>
+      </div>
+    </div>
+    <div class="members-grid" id="gen3"></div>
+  </div>
+
+</div>
+
+<!-- TIMELINE -->
+<section class="timeline-section" id="heritage">
+  <div class="timeline-bg">HISTORY</div>
+  <div class="timeline-inner">
+    <div class="section-label">Heritage</div>
+    <h2 class="section-title">Our Family Story</h2>
+    <div class="timeline" id="timelineEl"></div>
+  </div>
+</section>
+
+<!-- PHOTO MOSAIC -->
+<section class="mosaic-section" id="moments">
+  <div class="mosaic-header">
+    <div class="section-label reveal">Memories</div>
+    <h2 class="section-title reveal">Family Moments</h2>
+  </div>
+  <div class="mosaic-grid" id="mosaicGrid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-title">The Anderson Family</div>
+  <div class="footer-sub">Together, always</div>
+  <div class="footer-divider"></div>
+  <div class="footer-copy">&copy; 2025 Anderson Family &mdash; Est. 1962</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalEl">
+    <div class="modal-photo" id="modalPhoto">
+      <div class="modal-photo-overlay">
+        <div>
+          <div class="modal-photo-name" id="mName"></div>
+          <div class="modal-photo-role" id="mRole"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-content">
+      <div>
+        <div class="modal-section-title">About</div>
+        <div class="modal-bio" id="mBio"></div>
+      </div>
+      <div>
+        <div class="modal-section-title">At a Glance</div>
+        <div class="modal-stats" id="mStats"></div>
+      </div>
+      <div id="mInterestsBlock">
+        <div class="modal-section-title">Interests &amp; Hobbies</div>
+        <div class="interests-list" id="mInterests"></div>
+      </div>
+      <div id="mGalleryBlock">
+        <div class="modal-section-title">Photo Gallery</div>
+        <div class="modal-gallery" id="mGallery"></div>
+      </div>
+    </div>
+  </div>
+  <button class="modal-close" id="modalClose">✕</button>
+</div>
+
+<script>
+// ─── DATA ───
+const family = {
+  gen1: [
+    {
+      id: 'g1_1',
+      name: 'Robert Anderson',
+      role: 'Grandfather · Patriarch',
+      initial: 'R',
+      color: '#8B6A4E',
+      born: '1942', hometown: 'Boston, MA', occupation: 'Retired Engineer',
+      bio: 'Robert built the foundation of our family with steady hands and an unwavering heart. A civil engineer for over 40 years, he shaped not just bridges and buildings, but the character of everyone around him. His Sunday morning pancakes remain unmatched.',
+      stats: [{ val: '83', lbl: 'Years' }, { val: '4', lbl: 'Children' }, { val: '7', lbl: 'Grandkids' }],
+      interests: ['Woodworking', 'Jazz Music', 'Fishing', 'History', 'Chess'],
+      gallery: ['R A', 'R B', 'R C'],
+    },
+    {
+      id: 'g1_2',
+      name: 'Margaret Anderson',
+      role: 'Grandmother · Matriarch',
+      initial: 'M',
+      color: '#7A5F4A',
+      born: '1944', hometown: 'Boston, MA', occupation: 'Retired Teacher',
+      bio: 'Margaret taught third grade for 35 years, but her greatest classroom was always home. Her warmth is legendary—no one leaves her kitchen without a full stomach and a lighter heart. She keeps every birthday card and remembers every milestone.',
+      stats: [{ val: '81', lbl: 'Years' }, { val: '4', lbl: 'Children' }, { val: '7', lbl: 'Grandkids' }],
+      interests: ['Gardening', 'Knitting', 'Book Club', 'Cooking', 'Watercolor'],
+      gallery: ['M A', 'M B', 'M C'],
+    },
+  ],
+  gen2: [
+    {
+      id: 'g2_1',
+      name: 'James Anderson',
+      role: 'Eldest Son · Father',
+      initial: 'J',
+      color: '#6B4F3A',
+      born: '1968', hometown: 'Chicago, IL', occupation: 'Architect',
+      bio: 'James inherited his father\'s love for structure and his mother\'s love for beauty. As a principal architect in Chicago, his buildings tell stories. At home, he\'s the one who fixes everything—and breaks a few things too.',
+      stats: [{ val: '57', lbl: 'Years' }, { val: '2', lbl: 'Children' }, { val: '30', lbl: 'Yrs Wed' }],
+      interests: ['Architecture', 'Cycling', 'Wine', 'Photography', 'Tennis'],
+      gallery: ['J A', 'J B', 'J C'],
+    },
+    {
+      id: 'g2_2',
+      name: 'Claire Anderson',
+      role: 'Daughter-in-Law · Mother',
+      initial: 'C',
+      color: '#8C7060',
+      born: '1970', hometown: 'Madison, WI', occupation: 'Pediatric Doctor',
+      bio: 'Claire brings both science and soul to everything she does. As a pediatrician, she\'s touched thousands of young lives. She has the rare gift of making you feel completely calm in her presence—children and adults alike.',
+      stats: [{ val: '55', lbl: 'Years' }, { val: '2', lbl: 'Children' }, { val: '18', lbl: 'Yrs Practiced' }],
+      interests: ['Yoga', 'Cooking', 'Hiking', 'Reading', 'Pottery'],
+      gallery: ['C A', 'C B', 'C C'],
+    },
+    {
+      id: 'g2_3',
+      name: 'Patricia Walsh',
+      role: 'Daughter · Aunt',
+      initial: 'P',
+      color: '#A08070',
+      born: '1972', hometown: 'New York, NY', occupation: 'Journalist',
+      bio: 'Patricia was always the most curious Anderson—asking questions before she could read the answers. Now as a senior journalist at the Times, she tells the stories that matter. Her laugh can fill any room in seconds.',
+      stats: [{ val: '53', lbl: 'Years' }, { val: '1', lbl: 'Child' }, { val: '28', lbl: 'Yrs Career' }],
+      interests: ['Travel', 'Writing', 'Cinema', 'Marathon Running', 'Jazz'],
+      gallery: ['P A', 'P B', 'P C'],
+    },
+    {
+      id: 'g2_4',
+      name: 'David Walsh',
+      role: 'Son-in-Law · Uncle',
+      initial: 'D',
+      color: '#75604A',
+      born: '1969', hometown: 'Dublin, Ireland', occupation: 'Music Producer',
+      bio: 'David arrived in Boston with a guitar, an accent, and an irresistible charm. He\'s produced three Grammy-nominated albums and still finds time to teach Marcus the chords to "Blackbird." The music in this family traces back to him.',
+      stats: [{ val: '56', lbl: 'Years' }, { val: '1', lbl: 'Child' }, { val: '22', lbl: 'Yrs Career' }],
+      interests: ['Music', 'Songwriting', 'Surfing', 'Whiskey Tasting', 'Rugby'],
+      gallery: ['D A', 'D B', 'D C'],
+    },
+  ],
+  gen3: [
+    {
+      id: 'g3_1',
+      name: 'Ethan Anderson',
+      role: 'Grandson · Eldest Grandchild',
+      initial: 'E',
+      color: '#9B7B5B',
+      born: '1998', hometown: 'Chicago, IL', occupation: 'Software Engineer',
+      bio: 'Ethan grew up between blueprints and medical journals, which maybe explains why he builds AI systems for healthcare. The quietest Anderson by nature, but the one whose ideas always stop the room. Currently training for his first ultramarathon.',
+      stats: [{ val: '27', lbl: 'Years' }, { val: '2', lbl: 'Languages' }, { val: '3', lbl: 'Apps Built' }],
+      interests: ['Coding', 'Running', 'Sci-Fi', 'Coffee', 'Rock Climbing'],
+      gallery: ['E A', 'E B', 'E C'],
+    },
+    {
+      id: 'g3_2',
+      name: 'Sophia Anderson',
+      role: 'Granddaughter',
+      initial: 'S',
+      color: '#B8906A',
+      born: '2001', hometown: 'Chicago, IL', occupation: 'Film Student',
+      bio: 'Sophia documented every family gathering since she was 12 years old. Now studying film at NYU, her short "The Color of Sunday" won best cinematography at the student festival. She sees the world in frames and light.',
+      stats: [{ val: '24', lbl: 'Years' }, { val: '8', lbl: 'Short Films' }, { val: '2', lbl: 'Awards' }],
+      interests: ['Filmmaking', 'Photography', 'Painting', 'Ballet', 'Poetry'],
+      gallery: ['S A', 'S B', 'S C'],
+    },
+    {
+      id: 'g3_3',
+      name: 'Marcus Walsh',
+      role: 'Grandson',
+      initial: 'M',
+      color: '#8A6844',
+      born: '2003', hometown: 'New York, NY', occupation: 'University Student',
+      bio: 'Marcus got his father\'s ear for music and his mother\'s fearless questions. Studying journalism at Columbia while playing bass in three bands simultaneously. He calls Grandma Margaret every Sunday without fail—the most reliable of all the grandchildren.',
+      stats: [{ val: '22', lbl: 'Years' }, { val: '3', lbl: 'Bands' }, { val: '1', lbl: 'Major' }],
+      interests: ['Music', 'Journalism', 'Basketball', 'Podcasting', 'Cooking'],
+      gallery: ['M W A', 'M W B', 'M W C'],
+    },
+  ],
+};
+
+const timeline = [
+  { year: '1962', event: 'Robert & Margaret Wed', desc: 'A small chapel ceremony in Boston on a crisp October afternoon. Family legend says it rained—Robert says the sun was shining.' },
+  { year: '1968', event: 'James is Born', desc: 'The first Anderson of the next generation, arriving in the middle of a snowstorm. Robert drove 40 mph the whole way to the hospital.' },
+  { year: '1972', event: 'Patricia Joins the Family', desc: 'The family\'s second child—and immediately, its loudest voice. Even as an infant, she had something to say about everything.' },
+  { year: '1994', event: 'James Marries Claire', desc: 'A summer wedding on the shore of Lake Michigan. Claire\'s vows made even Robert shed a tear, which he denies to this day.' },
+  { year: '1998', event: 'Ethan is Born', desc: 'The first grandchild. Robert built a wooden cradle for the occasion. Margaret knit a blanket that Ethan still keeps at his apartment.' },
+  { year: '2001', event: 'Sophia Enters the World', desc: 'From day one, Sophia watched everything with wide, curious eyes—as if already deciding how to frame it.' },
+  { year: '2003', event: 'Marcus Completes the Family', desc: 'Born humming. Seriously—the nurses mentioned it. David started teaching him guitar six months later.' },
+  { year: '2024', event: 'Three Generations Reunite', desc: 'The biggest family reunion yet, gathered at the old Boston house. Seven grandkids, four generations of stories, one extraordinary weekend.' },
+];
+
+const mosaicData = [
+  'Summer Reunion 2024', 'Christmas Morning', 'Grandpa\'s Workshop',
+  'Beach Afternoon', 'Margaret\'s Garden', 'Family Dinner', 'Robert & Margaret',
+  'The Grandchildren',
+];
+
+// ─── RENDER CARDS ───
+function renderCards(containerId, members) {
+  const el = document.getElementById(containerId);
+  members.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'member-card';
+    card.style.transitionDelay = `${i * 0.08}s`;
+    card.innerHTML = `
+      <div class="card-photo">
+        <div class="photo-placeholder" style="background: linear-gradient(160deg,${m.color}22,${m.color}11)">
+          <div class="placeholder-initial" style="color:${m.color}">${m.initial}</div>
+          <div class="placeholder-icon">✦</div>
+        </div>
+        <div class="card-overlay">
+          <div class="overlay-action">View Profile</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${m.name}</div>
+        <div class="card-role">${m.role}</div>
+        <div class="card-detail">${m.bio.substring(0, 80)}…</div>
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Born</div><div class="meta-val">${m.born}</div></div>
+          <div class="meta-item"><div class="meta-label">Based in</div><div class="meta-val">${m.hometown.split(',')[0]}</div></div>
+        </div>
+      </div>`;
+    card.addEventListener('click', () => openModal(m));
+    el.appendChild(card);
+  });
+}
+
+renderCards('gen1', family.gen1);
+renderCards('gen2', family.gen2);
+renderCards('gen3', family.gen3);
+
+// ─── TIMELINE ───
+const tlEl = document.getElementById('timelineEl');
+timeline.forEach((t, i) => {
+  const item = document.createElement('div');
+  item.className = 'timeline-item';
+  item.style.transitionDelay = `${i * 0.1}s`;
+  item.innerHTML = `
+    <div class="timeline-dot"></div>
+    <div class="timeline-year">${t.year}</div>
+    <div class="timeline-event">${t.event}</div>
+    <div class="timeline-desc">${t.desc}</div>`;
+  tlEl.appendChild(item);
+});
+
+// ─── MOSAIC ───
+const mosaic = document.getElementById('mosaicGrid');
+mosaicData.forEach((cap, i) => {
+  const item = document.createElement('div');
+  item.className = 'mosaic-item';
+  const colors = ['#C9A84C','#6B4F3A','#8B6A4E','#A08070','#75604A','#9B7B5B','#B8906A','#8A6844'];
+  item.innerHTML = `
+    <div class="mosaic-ph" style="background:linear-gradient(135deg,${colors[i]}18,${colors[i]}08)">
+      <span style="color:${colors[i]};opacity:0.5">✦</span>
+    </div>
+    <div class="mosaic-caption">${cap}</div>`;
+  mosaic.appendChild(item);
+});
+
+// ─── MODAL ───
+function openModal(m) {
+  document.getElementById('mName').textContent = m.name;
+  document.getElementById('mRole').textContent = m.role;
+  document.getElementById('mBio').textContent = m.bio;
+
+  const photoEl = document.getElementById('modalPhoto');
+  // Clear old placeholder if any
+  let ph = photoEl.querySelector('.modal-photo-placeholder');
+  if (ph) ph.remove();
+
+  // Always show placeholder
+  const placeholder = document.createElement('div');
+  placeholder.className = 'modal-photo-placeholder';
+  placeholder.style.background = `linear-gradient(160deg, ${m.color}33, ${m.color}11)`;
+  placeholder.innerHTML = `<div class="modal-initial" style="color:${m.color}">${m.initial}</div>`;
+  photoEl.insertBefore(placeholder, photoEl.firstChild);
+
+  document.getElementById('mStats').innerHTML = m.stats.map(s => `
+    <div class="stat-box"><div class="val">${s.val}</div><div class="lbl">${s.lbl}</div></div>`).join('');
+
+  document.getElementById('mInterests').innerHTML = m.interests.map(i =>
+    `<div class="interest-tag">${i}</div>`).join('');
+
+  document.getElementById('mGallery').innerHTML = m.gallery.map((g, i) => `
+    <div class="gallery-thumb" style="background:linear-gradient(${135 + i*30}deg,${m.color}33,${m.color}11)">
+      <div style="width:100%;height:100%;min-height:90px;display:flex;align-items:center;justify-content:center;
+        font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:0.3em;color:${m.color};opacity:0.6;text-transform:uppercase">
+        ${g}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── CURSOR ───
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animateCursor() {
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+})();
+
+document.querySelectorAll('.member-card, .modal-close, nav a, .mosaic-item, .gallery-thumb, .interest-tag').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+});
+
+// ─── NAV SCROLL ───
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ─── INTERSECTION OBSERVER ───
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.reveal, .generation-block, .timeline-item').forEach(el => io.observe(el));
+
+// Stagger children in generation blocks
+const blockObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.member-card').forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = `opacity 0.6s ease ${i*0.1}s, transform 0.6s ease ${i*0.1}s`;
+        setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 50);
+      });
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.generation-block').forEach(b => blockObs.observe(b));
+
+</script>
+</body>
+</html>
